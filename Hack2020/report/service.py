@@ -1,4 +1,4 @@
-from docxtpl import import DocxTemplate
+from docxtpl import DocxTemplate
 def make_card(data):
     ...
     return

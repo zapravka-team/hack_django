@@ -5,8 +5,6 @@ from .models import Pet
 
 class PetSerializer(ModelSerializer):
 
-    #name = ser.CharField(label='кличка', )
-
     class Meta:
         model = Pet
         fields = '__all__'

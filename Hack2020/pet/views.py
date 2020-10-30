@@ -8,8 +8,3 @@ from .models import Pet
 class PetView(ListAPIView):
     serializer_class = PetSerializer
     queryset = Pet.objects.all()
-    fields = '__all__'
-    class Meta:
-        model = Pet
-        fields = '__all__'
-        fields = '__all__'
