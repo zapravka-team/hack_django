@@ -1,15 +1,12 @@
 from django.shortcuts import render
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListCreateAPIView
 
 from .serializer import PetSerializer
 from .models import Pet
+
+
 # Create your views here.
 
-class PetView(ListAPIView):
+class PetView(ListCreateAPIView):
     serializer_class = PetSerializer
     queryset = Pet.objects.all()
-    fields = '__all__'
-    class Meta:
-        model = Pet
-        fields = '__all__'
-        fields = '__all__'

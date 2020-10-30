@@ -14,9 +14,12 @@ class CustomSerializer(ModelSerializer):
 
 
 class PetSerializer(ModelSerializer):
-    # name = ser.CharField(label='кличка', )
+
     def to_internal_value(self, data):
-        return
+        ret = super().to_internal_value(data)
+        print(ret)
+
+        return ret
 
     def to_representation(self, instance):
         return {
