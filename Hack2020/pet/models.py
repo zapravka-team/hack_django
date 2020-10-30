@@ -42,21 +42,21 @@ class Pet(models.Model):
     ...
 
     # health
-    inspection_date
-    anamnesis
+    inspection_date = models.DateField(null=False)
+    anamnesis = models.CharField(max_length=40)
 
 
 class Treatment(models.Model):
-    pet
-    number
-    date
-    product_name
-    dose
+    pet = models.ForeignKey(Pet)
+    number = models.PositiveIntegerField()
+    date = models.DateField(null=False)
+    product_name = models.CharField(max_length=128)
+    dose = models.FloatField()
 
 
 class Vaccination(models.Model):
-    pet
-    number
-    date
-    vac_type
-    seria_number
+    pet = models.ForeignKey(Pet)
+    number = models.PositiveIntegerField()
+    date = models.DateField(null=False)
+    vac_type = models.CharField(max_length=128)
+    seria_number = models.IntegerField()
