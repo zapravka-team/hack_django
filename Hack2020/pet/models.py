@@ -58,7 +58,7 @@ class Pet(models.Model):
     pet_type = models.ForeignKey(PetType, on_delete=models.SET_NULL, null=True)
     birthdate = models.DateField(null=False)
     weight = models.IntegerField(null=False)
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, name='кличка', db_column='name')
     gender = models.SmallIntegerField(choices=((0, 'Male'), (1, 'Female')))
     bread = models.ForeignKey(Bread, on_delete=models.SET_NULL, null=True)
     color = models.ForeignKey(ColorType, on_delete=models.SET_NULL, null=True)
