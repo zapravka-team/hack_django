@@ -66,7 +66,7 @@ class Pet(models.Model):
     tail_type = models.ForeignKey(TailType, on_delete=models.SET_NULL, null=True)
     size_type = models.ForeignKey(SizeType, on_delete=models.SET_NULL, null=True)
     special_parameters = models.CharField(max_length=128)
-    avairy = models.IntegerField()
+    aviary = models.IntegerField()
 
     # special info
     id_label = models.CharField(max_length=128)
