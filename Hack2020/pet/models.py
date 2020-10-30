@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 
 class AbstractTypeModel(models.Model):
-    key = models.CharField(max_length=120)
+    value = models.CharField(max_length=120)
 
     class Meta:
         abstract = True
@@ -39,7 +39,7 @@ class SizeType(AbstractTypeModel):
     pass
 
 
-class AdministrationArea(AbstractTypeModel):
+class OperatingOrganization(AbstractTypeModel):
     pass
 
 
@@ -77,7 +77,7 @@ class Pet(models.Model):
 
     # catching
     work_order = models.CharField(max_length=32)
-    administration_area = models.ForeignKey(AdministrationArea, on_delete=models.SET_NULL, null=True)
+    administration_area = models.ForeignKey(OperatingOrganization, on_delete=models.SET_NULL, null=True)
     catching_act = models.CharField(max_length=32)
     catching_address = models.CharField(max_length=256)
 
@@ -95,6 +95,12 @@ class Treatment(models.Model):
     date = models.DateField(null=False)
     product_name = models.CharField(max_length=128)
     dose = models.CharField(max_length=20)
+
+
+class Shelter(models.Model):
+    address = models.CharField(max_length=256)
+    name = models.CharField(max_length=128)
+    operating_organization = models.ForeignKey(OperatingOrganization, on_delete=models.SET_NULL, null=False)
 
 
 class Vaccination(models.Model):
