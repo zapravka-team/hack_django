@@ -1,5 +1,6 @@
 from rest_framework.generics import ListAPIView
-
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from manufacture.serializers import ShelterSerializerLight, OperationOrganizationSerializer
 from pet.serializer import PetTypeSerializer, PetGenderSerializer, BreedSerializer, ColorTypeSerializer, \
     FursTypeSerializer, EarTypeSerializer, TailTypeSerializer, DeathCauseSerializer, DisposeCauseSerializer, \
@@ -29,45 +30,53 @@ class PetTypesView(ListAPIView):
 
 
 class PetGendersView(ListAPIView):
-    parser_classes = PetGenderSerializer
+    serializer_classes = PetGenderSerializer
     queryset = PetGender.objects.all()
 
 
-class BreedsView(ListAPIView):
-    parser_classes = BreedSerializer
-    queryset = Breed.objects.all()
+class BreedsView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        cats = BreedSerializer(Breed.objects.filter(pet_type__value='кошка'), many=True)
+        dogs = BreedSerializer(Breed.objects.filter(pet_type__value='собака'), many=True)
+        return Response(data={'cats': cats.data, 'dogs': dogs.data})
 
 
-class ColorsView(ListAPIView):
-    parser_classes = ColorTypeSerializer
-    queryset = ColorType.objects.all()
+class ColorsView(APIView):
+    def get(self, request, *args, **kwargs):
+        cats = ColorTypeSerializer(ColorType.objects.filter(pet_type__value='кошка'), many=True)
+        dogs = ColorTypeSerializer(ColorType.objects.filter(pet_type__value='собака'), many=True)
+        return Response(data={'cats': cats.data, 'dogs': dogs.data})
 
 
-class FursTypesView(ListAPIView):
-    parser_classes = FursTypeSerializer
-    queryset = FursType.objects.all()
+class FursTypesView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        cats = FursTypeSerializer(FursType.objects.filter(pet_type__value='кошка'), many=True)
+        dogs = FursTypeSerializer(FursType.objects.filter(pet_type__value='собака'), many=True)
+        return Response(data={'cats': cats.data, 'dogs': dogs.data})
 
 
 class EarTypesView(ListAPIView):
-    parser_classes = EarTypeSerializer
+    serializer_classes = EarTypeSerializer
     queryset = EarType.objects.all()
 
 
 class TailTypesView(ListAPIView):
-    parser_classes = TailTypeSerializer
+    serializer_class = TailTypeSerializer
     queryset = TailType.objects.all()
 
 
 class DeathCausesView(ListAPIView):
-    parser_classes = DeathCauseSerializer
+    serializer_classes = DeathCauseSerializer
     queryset = DeathCause.objects.all()
 
 
 class DisposalCauseView(ListAPIView):
-    parser_classes = DisposeCauseSerializer
+    serializer_class = DisposeCauseSerializer
     queryset = DisposeCause.objects.all()
 
 
 class EuthanasiaCauseBookView(ListAPIView):
-    parser_classes = EuthanasiaCauseSerializer
+    serializer_class = EuthanasiaCauseSerializer
     queryset = EuthanasiaCause.objects.all()

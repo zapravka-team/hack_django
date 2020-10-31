@@ -3,7 +3,7 @@ from rest_framework import serializers as ser
 from .models import Shelter, OperatingOrganization, AdministrativeRegion, Prefecture
 
 
-class OperationOrganizationSerializer(ser.ModelSerializer):
+class OperationOrganizationSerializer(ser.Serializer):
     class Meta:
         model = OperatingOrganization
         exclude = ['id']
