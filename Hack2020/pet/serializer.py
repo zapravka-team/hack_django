@@ -14,7 +14,9 @@ class CustomSerializer(ModelSerializer):
 
 
 class PetSerializer(ModelSerializer):
-
+    class Meta:
+        model = Pet
+        fields = '__all__'
     def to_internal_value(self, data):
         ret = super().to_internal_value(data)
         print(ret)
@@ -53,38 +55,38 @@ class PetSerializer(ModelSerializer):
                     "адрес места отлова": instance.catching_address
                 },
                 "сведения о новых владельцах": [{
-                    "юридическое лицо": instance.,
-                    "ф.и.о. опекунов": instance.,
-                    "физическое лицо ф.и.о.": instance.
+                    "юридическое лицо": instance.id,
+                    "ф.и.о. опекунов": instance.id,
+                    "физическое лицо ф.и.о.": instance.id
                 }],
                 "движение животного": {
-                    "дата поступления в приют": instance.,
-                    "акт №": instance.,
-                    "дата выбытия из приюта": instance.,
-                    "причина выбытия": instance.,
-                    "акт/договор №": instance.
+                    "дата поступления в приют": instance.recipient_date,
+                    "акт №": instance.recipient_act,
+                    "дата выбытия из приюта": instance.disposals_date,
+                    "причина выбытия": instance.disposals_cause,
+                    "акт/договор №": instance.contract_act
                 },
                 "ответственные за животное": {
-                    "адрес приюта": instance.,
-                    "эксплуатирующая организация": instance.,
-                    "ф.и.о. руководителя приюта": instance.,
-                    "ф.и.о. сотрудника по уходу за животным": instance.
+                    "адрес приюта": instance.id,
+                    "эксплуатирующая организация": instance.id,
+                    "ф.и.о. руководителя приюта": instance.id,
+                    "ф.и.о. сотрудника по уходу за животным": instance.id
                 },
                 "сведения об обработке от экто- и эндопаразитов": [{
-                    "№ п/п": instance.,
-                    "дата": instance.,
-                    "название препарата": instance.,
-                    "доза": instance.
+                    "№ п/п": instance.id,
+                    "дата": instance.id,
+                    "название препарата": instance.id,
+                    "доза": instance.id
                 }],
                 "сведения о вакцинации": [{
-                    "№ п/п": instance.,
-                    "дата": instance.,
-                    "вид вакцины": instance.,
-                    "№ серии": instance.
+                    "№ п/п": instance.number,
+                    "дата": instance.date,
+                    "вид вакцины": instance.vac_type,
+                    "№ серии": instance.serial_number
                 }],
                 "сведения о состоянии здоровья": {
-                    "дата осмотра": instance.,
-                    "анамнез": instance.
+                    "дата осмотра": instance.id,
+                    "анамнез": instance.id
                 }
         }
 
