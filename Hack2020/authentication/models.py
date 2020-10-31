@@ -1,3 +1,4 @@
+import uuid as uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -8,7 +9,7 @@ from .managers import UserManager
 
 class AdditionalPerson(models.Model):
     nlp = models.CharField(max_length=128)
-    uuid = models.UUIDField(auto_created=True)
+    uuid = models.UUIDField(auto_created=True, editable=False,  default=uuid.uuid4)
 
     class Meta:
         abstract = True
@@ -44,7 +45,7 @@ ROLES = [
 class SiteUser(AbstractUser):
     email = models.EmailField('email address', blank=True, unique=True)
 
-    is_admin = models.BooleanField()
+    is_admin = models.BooleanField(default=False)
     role = models.CharField(max_length=4, choices=ROLES)
 
     last_name = None

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields.related import RelatedField
 
 
 class AbstractTypeModel(models.Model):
@@ -53,19 +54,23 @@ class PetGender(AbstractTypeModel):
     pass
 
 
+class TypeField(models.ForeignKey):
+    pass
+
+
 class Pet(models.Model):
     accounting_card = models.CharField(max_length=128, unique=True, null=False)
     birthdate = models.DateField(null=False)
     weight = models.DecimalField(null=False, max_digits=10, decimal_places=2)
     name = models.CharField(max_length=128)
-    gender = models.ForeignKey(PetGender, on_delete=models.SET_NULL, null=True)
-    pet_type = models.ForeignKey(PetType, on_delete=models.SET_NULL, null=True)
-    bread = models.ForeignKey(Bread, on_delete=models.SET_NULL, null=True)
-    color = models.ForeignKey(ColorType, on_delete=models.SET_NULL, null=True)
-    furs_type = models.ForeignKey(FursType, on_delete=models.SET_NULL, null=True)
-    ears_type = models.ForeignKey(EarType, on_delete=models.SET_NULL, null=True)
-    tail_type = models.ForeignKey(TailType, on_delete=models.SET_NULL, null=True)
-    size_type = models.ForeignKey(SizeType, on_delete=models.SET_NULL, null=True)
+    gender = TypeField(PetGender, on_delete=models.SET_NULL, null=True)
+    pet_type = TypeField(PetType, on_delete=models.SET_NULL, null=True)
+    bread = TypeField(Bread, on_delete=models.SET_NULL, null=True)
+    color = TypeField(ColorType, on_delete=models.SET_NULL, null=True)
+    furs_type = TypeField(FursType, on_delete=models.SET_NULL, null=True)
+    ears_type = TypeField(EarType, on_delete=models.SET_NULL, null=True)
+    tail_type = TypeField(TailType, on_delete=models.SET_NULL, null=True)
+    size_type = TypeField(SizeType, on_delete=models.SET_NULL, null=True)
     special_parameters = models.CharField(max_length=128)
     aviary = models.IntegerField()
 
@@ -110,15 +115,29 @@ class Pet(models.Model):
 
     @classmethod
     def get_field_names(cls):
-        return (field.name for field in cls._meta.get_fields())
+        return list(field.name for field in cls._meta.get_fields())
 
     @classmethod
     def get_related_filed_names(cls):
-        return
+        related_fields = []
+        for field in cls._meta.get_fields():
+            if not isinstance(field, RelatedField):
+                related_fields.append(field.name)
+        return tuple(related_fields)
+
+    @classmethod
+    def get_type_filed_names(cls):
+        related_fields = []
+        for field in cls._meta.get_fields():
+            if isinstance(field, RelatedField):
+                if isinstance(field, TypeField):
+                    related_fields.append(field.name)
+
+        return tuple(related_fields)
 
 
 class Treatment(models.Model):
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='treatment')
     number = models.PositiveIntegerField()
     date = models.DateField(null=False)
     product_name = models.CharField(max_length=128)
@@ -126,7 +145,7 @@ class Treatment(models.Model):
 
 
 class Vaccination(models.Model):
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='vaccination')
     number = models.PositiveIntegerField()
     date = models.DateField(null=False)
     vac_type = models.CharField(max_length=128)
@@ -134,6 +153,6 @@ class Vaccination(models.Model):
 
 
 class HealthStatus(models.Model):
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='health_status')
     inspection_date = models.DateField(null=False)
     anamnesis = models.CharField(max_length=40)
