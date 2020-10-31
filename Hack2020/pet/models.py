@@ -82,7 +82,7 @@ class Pet(models.Model):
     accounting_card = models.CharField(max_length=128, unique=True, null=False)
     birthdate = models.DateField(null=False)
     weight = models.DecimalField(null=False, max_digits=10, decimal_places=2)
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, null=True)
     gender = TypeField(PetGender, on_delete=models.SET_NULL, null=True)
     pet_type = TypeField(PetType, on_delete=models.SET_NULL, null=True)
     breed = TypeField(Breed, on_delete=models.SET_NULL, null=True)
@@ -92,34 +92,34 @@ class Pet(models.Model):
     tail_type = TypeField(TailType, on_delete=models.SET_NULL, null=True)
     size_type = TypeField(SizeType, on_delete=models.SET_NULL, null=True)
     special_parameters = models.CharField(max_length=128)
-    aviary = models.IntegerField()
+    aviary = models.CharField(max_length=10, null=True)
 
     # special info
     id_label = models.CharField(max_length=128)
     sterilization_status = TypeField(SterilizationType, on_delete=models.SET_NULL, null=True)
     sterilization_date = models.DateField(null=True)
     vet = models.ForeignKey('authentication.Vet', on_delete=models.SET_NULL, null=True)
-    socialized = models.BooleanField()
+    socialized = models.BooleanField(null=True)
 
     # catching
-    work_order = models.CharField(max_length=32)
-    work_order_date = models.DateField()
+    work_order = models.CharField(max_length=32,null=True)
+    work_order_date = models.DateField(null=True)
     administration_area = models.ForeignKey('manufacture.AdministrativeRegion', on_delete=models.SET_NULL, null=True)
-    catching_act = models.CharField(max_length=32)
-    catching_address = models.CharField(max_length=256)
+    catching_act = models.CharField(max_length=32, null=True)
+    catching_address = models.CharField(max_length=256, null=True)
 
     # new owners
     legal_entity = models.ForeignKey('manufacture.LegalEntity', on_delete=models.SET_NULL, null=True)
     owner = models.ForeignKey('authentication.PetOwner', on_delete=models.SET_NULL, null=True)
 
     # movement
-    recipient_date = models.DateField()
-    recipient_act = models.CharField(max_length=128)
-    disposals_date = models.DateField()
+    recipient_date = models.DateField(null=True)
+    recipient_act = models.CharField(max_length=128, null=True)
+    disposals_date = models.DateField(null=True)
     disposals_cause = models.ForeignKey(DisposeCause, on_delete=models.SET_NULL, null=True)
     death_cause = models.ForeignKey(DeathCause, on_delete=models.SET_NULL, null=True)
     euthanasia_cause = models.ForeignKey(EuthanasiaCause, on_delete=models.SET_NULL, null=True)
-    contract_act = models.CharField(max_length=128)
+    contract_act = models.CharField(max_length=128, null=True)
 
     # Caregivers
     caregiver = models.ForeignKey('authentication.Caregiver', on_delete=models.SET_NULL, null=True)
@@ -156,21 +156,21 @@ class Pet(models.Model):
 
 class Treatment(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='treatment')
-    number = models.PositiveIntegerField()
-    date = models.DateField(null=False)
-    product_name = models.CharField(max_length=128)
-    dose = models.CharField(max_length=20)
+    number = models.CharField(max_length=50, null=True)
+    date = models.DateField(null=True)
+    product_name = models.CharField(max_length=128, null=True)
+    dose = models.CharField(max_length=20, null=True)
 
 
 class Vaccination(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='vaccination')
-    number = models.PositiveIntegerField()
+    number = models.CharField(max_length=50, null=True)
     date = models.DateField(null=False)
-    vac_type = models.CharField(max_length=128)
-    serial_number = models.IntegerField()
+    vac_type = models.CharField(max_length=128, null=True)
+    serial_number = models.CharField(max_length=50, null=True)
 
 
 class HealthStatus(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='health_status')
-    inspection_date = models.DateField(null=False)
-    anamnesis = models.CharField(max_length=40)
+    inspection_date = models.DateField(null=True)
+    anamnesis = models.CharField(max_length=40, null=True)

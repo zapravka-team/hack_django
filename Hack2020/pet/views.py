@@ -14,9 +14,9 @@ import xlrd
 class PetsView(APIView):
 
     def post(self, request, *args, **kwargs):
-        load_all()
+        # load_all()
         print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        #load_xlsx()
+        load_xlsx()
         request_data = request.data
         norm_req = normalize_pet_query_request(request_data)
         ser = PetSerializer(get_pet_query(norm_req), many=True)
