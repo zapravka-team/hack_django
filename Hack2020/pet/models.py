@@ -49,12 +49,16 @@ class EuthanasiaCause(AbstractTypeModel):
     pass
 
 
+class PetGender(AbstractTypeModel):
+    pass
+
+
 class Pet(models.Model):
     accounting_card = models.CharField(max_length=128, unique=True, null=False)
     birthdate = models.DateField(null=False)
     weight = models.DecimalField(null=False, max_digits=10, decimal_places=2)
     name = models.CharField(max_length=128)
-    gender = models.SmallIntegerField(choices=((0, 'Male'), (1, 'Female')))
+    gender = models.ForeignKey(PetGender, on_delete=models.SET_NULL, null=True)
     pet_type = models.ForeignKey(PetType, on_delete=models.SET_NULL, null=True)
     bread = models.ForeignKey(Bread, on_delete=models.SET_NULL, null=True)
     color = models.ForeignKey(ColorType, on_delete=models.SET_NULL, null=True)
@@ -103,6 +107,14 @@ class Pet(models.Model):
     # system
     create_time = models.DateTimeField(auto_created=True, auto_now_add=True, editable=False)
     last_update_time = models.DateTimeField(auto_now=True, editable=False)
+
+    @classmethod
+    def get_field_names(cls):
+        return (field.name for field in cls._meta.get_fields())
+
+    @classmethod
+    def get_related_filed_names(cls):
+        return
 
 
 class Treatment(models.Model):
