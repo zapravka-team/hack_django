@@ -165,7 +165,7 @@ class Treatment(models.Model):
 class Vaccination(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='vaccination')
     number = models.CharField(max_length=50, null=True)
-    date = models.DateField(null=False)
+    date = models.DateField(null=True)
     vac_type = models.CharField(max_length=128, null=True)
     serial_number = models.CharField(max_length=50, null=True)
 

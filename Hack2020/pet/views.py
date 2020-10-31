@@ -14,7 +14,7 @@ import xlrd
 class PetsView(APIView):
 
     def post(self, request, *args, **kwargs):
-        # load_all()
+        load_all()
         print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         load_xlsx()
         request_data = request.data
