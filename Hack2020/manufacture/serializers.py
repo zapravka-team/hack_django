@@ -9,6 +9,14 @@ class OperationOrganizationSerializer(ser.ModelSerializer):
         exclude = ['id']
 
 
+class ShelterSerializerLight(ser.ModelSerializer):
+    operating_organization = ser.CharField(source='operating_organization.name')
+
+    class Meta:
+        model = Shelter
+        exclude = ['id']
+
+
 class ShelterSerializer(ser.ModelSerializer):
     operating_organization = OperationOrganizationSerializer()
 

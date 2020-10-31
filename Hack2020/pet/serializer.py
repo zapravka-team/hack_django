@@ -1,11 +1,22 @@
-from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
 import rest_framework.serializers as ser
-from .models import Pet, HealthStatus, Vaccination, Treatment, PetType, ColorType, FursType, TailType, EarType, \
-    DeathCause, PetGender, Bread
 
+from .models import Pet, HealthStatus, Vaccination, Treatment, PetType, ColorType, FursType, TailType, EarType, \
+    DeathCause, PetGender, Bread, DisposeCause, EuthanasiaCause
 from authentication.serializers import VetSerializer, CaregiverSerializer, PetOwnerSerializer
 from manufacture.serializers import ShelterSerializer
+
+
+class EuthanasiaCauseSerializer(ModelSerializer):
+    class Meta:
+        model = EuthanasiaCause
+        exclude = ['id']
+
+
+class DisposeCauseSerializer(ModelSerializer):
+    class Meta:
+        model = DisposeCause
+        exclude = ['id']
 
 
 class ColorTypeSerializer(ModelSerializer):
