@@ -1,13 +1,17 @@
-from django.shortcuts import render
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Pet
+from .services import get_pet_query, normalize_pet_query_request
 
 from .serializer import PetSerializer
-from .models import Pet
 
 
 # Create your views here.
 
-class PetView(ListCreateAPIView):
-    serializer_class = PetSerializer
-    queryset = Pet.objects.all()
+class PetsView(APIView):
 
+    def post(self, request, *args, **kwargs):
+        request_data = request.data
+        norm_req = normalize_pet_query_request(request_data)
+        ser = PetSerializer(get_pet_query(norm_req), many=True)
+        return Response(data=ser.data)
