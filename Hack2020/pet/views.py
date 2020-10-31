@@ -10,3 +10,4 @@ from .models import Pet
 class PetView(ListCreateAPIView):
     serializer_class = PetSerializer
     queryset = Pet.objects.all()
+
