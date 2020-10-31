@@ -2,7 +2,7 @@ from rest_framework.serializers import ModelSerializer
 import rest_framework.serializers as ser
 
 from .models import Pet, HealthStatus, Vaccination, Treatment, PetType, ColorType, FursType, TailType, EarType, \
-    DeathCause, PetGender, Bread, DisposeCause, EuthanasiaCause
+    DeathCause, PetGender, Breed, DisposeCause, EuthanasiaCause
 from authentication.serializers import VetSerializer, CaregiverSerializer, PetOwnerSerializer
 from manufacture.serializers import ShelterSerializer
 
@@ -22,13 +22,13 @@ class DisposeCauseSerializer(ModelSerializer):
 class ColorTypeSerializer(ModelSerializer):
     class Meta:
         model = ColorType
-        exclude = ['id']
+        fields = ['value']
 
 
 class FursTypeSerializer(ModelSerializer):
     class Meta:
         model = FursType
-        exclude = ['id']
+        fields = ['value']
 
 
 class TailTypeSerializer(ModelSerializer):
@@ -55,16 +55,16 @@ class PetGenderSerializer(ModelSerializer):
         exclude = ['id']
 
 
-class BreadSerializer(ModelSerializer):
+class BreedSerializer(ModelSerializer):
     class Meta:
-        model = Bread
-        exclude = ['id']
+        model = Breed
+        fields = ['value']
 
 
 class PetTypeSerializer(ModelSerializer):
     class Meta:
         model = PetType
-        fields = ['key']
+        fields = ['value']
 
 
 class HealthStatusSerializer(ser.ModelSerializer):
@@ -87,7 +87,7 @@ class TreatmentSerializer(ser.ModelSerializer):
 
 class PetSerializer(ser.ModelSerializer):
     color = ser.CharField(source='color.value')
-    bread = ser.CharField(source='bread.value')
+    breed = ser.CharField(source='breed.value')
     pet_type = ser.CharField(source='pet_type.value')
     furs_type = ser.CharField(source='furs_type.value')
     ears_type = ser.CharField(source='ears_type.value')

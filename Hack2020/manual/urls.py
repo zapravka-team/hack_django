@@ -2,7 +2,6 @@ from django.urls import path
 from .views import SheltersView
 from .views import OpOrgsView
 from .views import PetTypesView
-from .views import PetGenderSerializer
 from .views import BreedsView
 from .views import ColorsView
 from .views import FursTypesView

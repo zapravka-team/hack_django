@@ -1,11 +1,10 @@
 from rest_framework.generics import ListAPIView
 
-
 from manufacture.serializers import ShelterSerializerLight, OperationOrganizationSerializer
-from pet.serializer import PetTypeSerializer, PetGenderSerializer, BreadSerializer, ColorTypeSerializer, \
+from pet.serializer import PetTypeSerializer, PetGenderSerializer, BreedSerializer, ColorTypeSerializer, \
     FursTypeSerializer, EarTypeSerializer, TailTypeSerializer, DeathCauseSerializer, DisposeCauseSerializer, \
     EuthanasiaCauseSerializer
-from pet.models import Bread
+from pet.models import Breed
 from manufacture.models import Shelter, OperatingOrganization
 from pet.models import PetType, PetGender, ColorType, FursType, EarType, TailType, DeathCause, DisposeCause, \
     EuthanasiaCause
@@ -35,8 +34,8 @@ class PetGendersView(ListAPIView):
 
 
 class BreedsView(ListAPIView):
-    parser_classes = BreadSerializer
-    queryset = Bread.objects.all()
+    parser_classes = BreedSerializer
+    queryset = Breed.objects.all()
 
 
 class ColorsView(ListAPIView):

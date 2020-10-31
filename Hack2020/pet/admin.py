@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Pet, PetType, SizeType, FursType, TailType, EarType, ColorType, Vaccination, Treatment, Bread, \
+from .models import Pet, PetType, SizeType, FursType, TailType, EarType, ColorType, Vaccination, Treatment, Breed, \
     DisposeCause, EuthanasiaCause, PetGender, HealthStatus, DeathCause
 
 # Register your models here.
@@ -8,7 +8,7 @@ from .models import Pet, PetType, SizeType, FursType, TailType, EarType, ColorTy
 admin.site.register(EarType)
 admin.site.register(TailType)
 admin.site.register(FursType)
-admin.site.register(Bread)
+admin.site.register(Breed)
 admin.site.register(PetType)
 admin.site.register(ColorType)
 admin.site.register(SizeType)
