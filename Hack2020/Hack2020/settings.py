@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'manual',
     'pet',
-    'staff',
+    'authentication',
+    'manufacture',
     'report',
 ]
 
@@ -85,6 +86,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# user model
+AUTH_USER_MODEL = 'authentication.SiteUSer'
 
 
 # Password validation

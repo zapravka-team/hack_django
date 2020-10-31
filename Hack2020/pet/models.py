@@ -1,8 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
-
 class AbstractTypeModel(models.Model):
     value = models.CharField(max_length=120)
 
@@ -39,10 +37,6 @@ class SizeType(AbstractTypeModel):
     pass
 
 
-class OperatingOrganization(AbstractTypeModel):
-    pass
-
-
 class DisposeCause(AbstractTypeModel):
     pass
 
@@ -53,31 +47,6 @@ class DeathCause(AbstractTypeModel):
 
 class EuthanasiaCause(AbstractTypeModel):
     pass
-
-
-class PetOwner(models.Model):
-    name = models.CharField(max_length=128)
-    uuid = models.UUIDField(auto_created=True)
-
-
-class Vet(models.Model):
-    name = models.CharField(max_length=128)
-    uuid = models.UUIDField(auto_created=True)
-
-
-class Caregiver(models.Model):
-    name = models.CharField(max_length=128)
-    uuid = models.UUIDField(auto_created=True)
-
-
-class AdministrativeRegion(models.Model):
-    name = models.CharField(max_length=128)
-
-
-class Shelter(models.Model):
-    address = models.CharField(max_length=256)
-    name = models.CharField(max_length=128)
-    operating_organization = models.ForeignKey(OperatingOrganization, on_delete=models.SET_NULL, null=True)
 
 
 class Pet(models.Model):
@@ -100,18 +69,18 @@ class Pet(models.Model):
     id_label = models.CharField(max_length=128)
     sterilized = models.BooleanField()
     sterilization_date = models.DateField(null=True)
-    vet_nlp = models.ForeignKey(Vet, on_delete=models.SET_NULL, null=True)
+    vet = models.ForeignKey('authentication.Vet', on_delete=models.SET_NULL, null=True)
     socialized = models.BooleanField()
 
     # catching
     work_order = models.CharField(max_length=32)
     work_order_date = models.DateField()
-    administration_area = models.ForeignKey(AdministrativeRegion, on_delete=models.SET_NULL, null=True)
+    administration_area = models.ForeignKey('manufacture.AdministrativeRegion', on_delete=models.SET_NULL, null=True)
     catching_act = models.CharField(max_length=32)
     catching_address = models.CharField(max_length=256)
 
     # new owners
-    owner = models.ForeignKey(PetOwner, on_delete=models.SET_NULL, null=True)
+    owner = models.ForeignKey('authentication.PetOwner', on_delete=models.SET_NULL, null=True)
 
     # movement
     recipient_date = models.DateField()
@@ -123,10 +92,10 @@ class Pet(models.Model):
     contract_act = models.CharField(max_length=128)
 
     # Caregivers
-    caregiver = models.ForeignKey(Caregiver, on_delete=models.SET_NULL, null=True)
+    caregiver = models.ForeignKey('authentication.Caregiver', on_delete=models.SET_NULL, null=True)
 
     # shelter
-    shelter = models.ForeignKey(Shelter, on_delete=models.SET_NULL, null=True)
+    shelter = models.ForeignKey('manufacture.Shelter', on_delete=models.SET_NULL, null=True)
 
     # health
     ...
