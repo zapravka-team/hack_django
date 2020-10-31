@@ -19,7 +19,7 @@ class TailType(AbstractTypeModel):
     pass
 
 
-class WoolType(AbstractTypeModel):
+class FursType(AbstractTypeModel):
     pass
 
 
@@ -43,25 +43,53 @@ class OperatingOrganization(AbstractTypeModel):
     pass
 
 
+class DisposeCause(AbstractTypeModel):
+    pass
+
+
+class DeathCause(AbstractTypeModel):
+    pass
+
+
+class EuthanasiaCause(AbstractTypeModel):
+    pass
+
+
 class PetOwner(models.Model):
     name = models.CharField(max_length=128)
+    uuid = models.UUIDField(auto_created=True)
 
 
-# not in use
 class Vet(models.Model):
     name = models.CharField(max_length=128)
+    uuid = models.UUIDField(auto_created=True)
+
+
+class Caregiver(models.Model):
+    name = models.CharField(max_length=128)
+    uuid = models.UUIDField(auto_created=True)
+
+
+class AdministrativeRegion(models.Model):
+    name = models.CharField(max_length=128)
+
+
+class Shelter(models.Model):
+    address = models.CharField(max_length=256)
+    name = models.CharField(max_length=128)
+    operating_organization = models.ForeignKey(OperatingOrganization, on_delete=models.SET_NULL, null=True)
 
 
 class Pet(models.Model):
     accounting_card = models.CharField(max_length=128, unique=True, null=False)
-    pet_type = models.ForeignKey(PetType, on_delete=models.SET_NULL, null=True)
     birthdate = models.DateField(null=False)
-    weight = models.IntegerField(null=False)
+    weight = models.DecimalField(null=False, max_digits=10, decimal_places=2)
     name = models.CharField(max_length=128)
     gender = models.SmallIntegerField(choices=((0, 'Male'), (1, 'Female')))
+    pet_type = models.ForeignKey(PetType, on_delete=models.SET_NULL, null=True)
     bread = models.ForeignKey(Bread, on_delete=models.SET_NULL, null=True)
     color = models.ForeignKey(ColorType, on_delete=models.SET_NULL, null=True)
-    wool_type = models.ForeignKey(WoolType, on_delete=models.SET_NULL, null=True)
+    furs_type = models.ForeignKey(FursType, on_delete=models.SET_NULL, null=True)
     ears_type = models.ForeignKey(EarType, on_delete=models.SET_NULL, null=True)
     tail_type = models.ForeignKey(TailType, on_delete=models.SET_NULL, null=True)
     size_type = models.ForeignKey(SizeType, on_delete=models.SET_NULL, null=True)
@@ -72,21 +100,40 @@ class Pet(models.Model):
     id_label = models.CharField(max_length=128)
     sterilized = models.BooleanField()
     sterilization_date = models.DateField(null=True)
-    vet_nlp = models.CharField(max_length=128, null=True)
+    vet_nlp = models.ForeignKey(Vet, on_delete=models.SET_NULL, null=True)
     socialized = models.BooleanField()
 
     # catching
     work_order = models.CharField(max_length=32)
-    administration_area = models.ForeignKey(OperatingOrganization, on_delete=models.SET_NULL, null=True)
+    work_order_date = models.DateField()
+    administration_area = models.ForeignKey(AdministrativeRegion, on_delete=models.SET_NULL, null=True)
     catching_act = models.CharField(max_length=32)
     catching_address = models.CharField(max_length=256)
 
-    # owners
+    # new owners
     owner = models.ForeignKey(PetOwner, on_delete=models.SET_NULL, null=True)
 
+    # movement
+    recipient_date = models.DateField()
+    recipient_act = models.CharField(max_length=128)
+    disposals_date = models.DateField()
+    disposals_cause = models.ForeignKey(DisposeCause, on_delete=models.SET_NULL, null=True)
+    death_cause = models.ForeignKey(DeathCause, on_delete=models.SET_NULL, null=True)
+    euthanasia_cause = models.ForeignKey(EuthanasiaCause, on_delete=models.SET_NULL, null=True)
+    contract_act = models.CharField(max_length=128)
+
+    # Caregivers
+    caregiver = models.ForeignKey(Caregiver, on_delete=models.SET_NULL, null=True)
+
+    # shelter
+    shelter = models.ForeignKey(Shelter, on_delete=models.SET_NULL, null=True)
+
     # health
-    inspection_date = models.DateField(null=False)
-    anamnesis = models.CharField(max_length=40)
+    ...
+
+    # system
+    create_time = models.DateTimeField(auto_created=True, auto_now_add=True, editable=False)
+    last_update_time = models.DateTimeField(auto_now=True, editable=False)
 
 
 class Treatment(models.Model):
@@ -97,15 +144,15 @@ class Treatment(models.Model):
     dose = models.CharField(max_length=20)
 
 
-class Shelter(models.Model):
-    address = models.CharField(max_length=256)
-    name = models.CharField(max_length=128)
-    operating_organization = models.ForeignKey(OperatingOrganization, on_delete=models.SET_NULL, null=False)
-
-
 class Vaccination(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
     number = models.PositiveIntegerField()
     date = models.DateField(null=False)
     vac_type = models.CharField(max_length=128)
-    seria_number = models.IntegerField()
+    serial_number = models.IntegerField()
+
+
+class HealthStatus(models.Model):
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
+    inspection_date = models.DateField(null=False)
+    anamnesis = models.CharField(max_length=40)
