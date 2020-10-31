@@ -20,6 +20,7 @@ def son(field):
     return str_or_none(field)
 
 
+
 def load_xlsx():
     data = pd.read_excel(os.path.join(settings.BASE_DIR, 'pet/DataSet.xlsx'), header=1)
 
@@ -34,7 +35,7 @@ def load_xlsx():
                       gender=PetGender.objects.get_or_create(value=pet_row[7].lower().strip())[0],
                       breed=Breed.objects.get_or_create(value=pet_row[8].lower().strip(), pet_type=pet_type)[0],
                       color=ColorType.objects.get_or_create(value=pet_row[9].lower().strip(), pet_type=pet_type)[0],
-                      furs_type=FursType.objects.get_or_create(value=pet_row[10].lower().strip, pet_type=pet_type)[0],
+                      furs_type=FursType.objects.get_or_create(value=pet_row[10].lower().strip(), pet_type=pet_type)[0],
                       ears_type=EarType.objects.get_or_create(value=pet_row[11].lower().strip())[0],
                       tail_type=TailType.objects.get_or_create(value=pet_row[12].lower().strip())[0],
                       size_type=SizeType.objects.get_or_create(value=pet_row[13].lower().strip())[0],
@@ -76,22 +77,22 @@ def load_xlsx():
             product_names = re.split(r"\s+", raw_product_name)
             doses = re.split("\s+", raw_dose)
             for i in range(min(len(numbers), len(dates), len(product_names), len(doses))):
-                treatment = Treatment(number=numbers[i], date=dates[i],
+                Treatment(number=numbers[i], date=dates[i],
                                       product_name=product_names[i],
                                       dose=doses[i], pet=pet).save()
-
+        #
         number = pet_row[50]
         dates = pet_row[51]
         vac_types = pet_row[52]
         serial_number = pet_row[53]
         if isinstance(number, int):
-            vaccination = Vaccination(number=int(pet_row[50]), date=dateparser.parse(str(pet_row[51])),
-                                      vac_type=pet_row[52].strip(),
-                                      serial_number=int(pet_row[53]), pet=pet).save()
+            vaccination = Vaccination(number=son(pet_row[50]), date=dateparser.parse(str(pet_row[51])),
+                                      vac_type=son(pet_row[52]),
+                                      serial_number=son(pet_row[53]), pet=pet).save()
         else:
-            numbers = re.split(r'\s+', number)
-            dates = list(map(dateparser.parse, re.split(r'\s+', dates)))
-            vac_types = re.split(r'\s+', vac_types)
+            numbers = re.split(r'\s+', str(number))
+            dates = list(map(dateparser.parse, re.split(r'\s+', str(dates))))
+            vac_types = re.split(r'\s+', str(vac_types))
 
         #         health_status = HealthStatus(inspection_date=dateparser.parse(str(pet_row[54])), anamnesis=pet_row[55].strip(),
         #                                      pet=pet).save()
