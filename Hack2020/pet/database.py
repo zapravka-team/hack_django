@@ -6,6 +6,7 @@ from manufacture.models import AdministrativeRegion, Shelter
 import dateparser
 from django.conf import settings
 import os
+import re
 
 
 def is_nan(num): return num != num
@@ -22,8 +23,8 @@ def son(field):
 def load_xlsx():
     data = pd.read_excel(os.path.join(settings.BASE_DIR, 'pet/DataSet.xlsx'), header=1)
 
-    for pet_row in data.itertuples():
-        print(type(pet_row[40]))
+    for i, pet_row in enumerate(data.itertuples()):
+        print(i)
         pet_type = PetType.objects.get_or_create(value=pet_row[3])[0]
         if not Pet.objects.filter(accounting_card=str(pet_row[2]).strip().lower()).exists():
             pet = Pet(accounting_card=str(pet_row[2]).strip().lower(), pet_type=pet_type,
@@ -61,24 +62,40 @@ def load_xlsx():
             pet.save()
         else:
             pet = Pet.objects.get(accounting_card=str(pet_row[2]).strip().lower())
-        # raw_numbers = pet_row[46]
-        # raw_date = pet_row[47]
-        # raw_product_name = pet_row[48]
-        # raw_dose = pet_row[49]
-        # if isinstance(raw_numbers, int):
-        #     treatment = Treatment(number=int(pet_row[46]), date=dateparser.parse(str(pet_row[47])),
-        #                           product_name=pet_row[48].strip(),
-        #                           dose=str(pet_row[49]).strip(), pet=pet).save()
-        # else:
-        #     numbers = raw_numbers.split(' ')
-        #     print(numbers)
-        #
-        # vaccination = Vaccination(number=int(pet_row[50]), date=dateparser.parse(str(pet_row[51])),
-        #                                   vac_type=pet_row[52].strip(),
-        #                                   serial_number=int(pet_row[53]), pet=pet).save()
+        raw_numbers = pet_row[46]
+        raw_date = pet_row[47]
+        raw_product_name = pet_row[48]
+        raw_dose = pet_row[49]
+        if isinstance(raw_numbers, int):
+            treatment = Treatment(number=int(pet_row[46]), date=dateparser.parse(str(pet_row[47])),
+                                  product_name=pet_row[48].strip(),
+                                  dose=son(pet_row[49]), pet=pet).save()
+        else:
+            numbers = re.split(r'\s+', raw_numbers)
+            dates = list(map(dateparser.parse, re.split(r"\s+", son(raw_date))))
+            product_names = re.split(r"\s+", raw_product_name)
+            doses = re.split("\s+", raw_dose)
+            for i in range(min(len(numbers), len(dates), len(product_names), len(doses))):
+                treatment = Treatment(number=numbers[i], date=dates[i],
+                                      product_name=product_names[i],
+                                      dose=doses[i], pet=pet).save()
+
+        number = pet_row[50]
+        dates = pet_row[51]
+        vac_types = pet_row[52]
+        serial_number = pet_row[53]
+        if isinstance(number, int):
+            vaccination = Vaccination(number=int(pet_row[50]), date=dateparser.parse(str(pet_row[51])),
+                                      vac_type=pet_row[52].strip(),
+                                      serial_number=int(pet_row[53]), pet=pet).save()
+        else:
+            numbers = re.split(r'\s+', number)
+            dates = list(map(dateparser.parse, re.split(r'\s+', dates)))
+            vac_types = re.split(r'\s+', vac_types)
+
         #         health_status = HealthStatus(inspection_date=dateparser.parse(str(pet_row[54])), anamnesis=pet_row[55].strip(),
         #                                      pet=pet).save()
-        # #
+        # # #
         # for pet_row in data.itertuples():
         #     pet = Pet(accounting_card=pet_row[2], pet_type=pet_row[3], birthdate=pet_row[4], weight=pet_row[5], name=pet_row[6],
         #               gender=PetGender.objects.get_or_create(pet_row[7].lower().strip()),
