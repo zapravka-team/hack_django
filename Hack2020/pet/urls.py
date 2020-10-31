@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import PetView
+from .views import PetsView
 
 urlpatterns = [
-    path('', PetView.as_view()),
+    path('', PetsView.as_view()),
 ]

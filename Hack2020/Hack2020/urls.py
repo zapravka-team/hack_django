@@ -21,7 +21,7 @@ from rest_framework_swagger.views import get_swagger_view
 schema_view = get_swagger_view(title="ZAPRAVKA XUY")
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('pet/', include('pet.urls')),
+    path('pets/', include('pet.urls')),
     path('report/', include('report.urls')),
     path('manual/', include('manual.urls')),
     path('api_documentation', schema_view)

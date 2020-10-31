@@ -1,52 +1,74 @@
-from django.shortcuts import render
-from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 
 
-# Create your views here.
-
-class SheltersView(APIView):
-    ...
-
-
-class OpOrgView(APIView):
-    ...
-
-
-class AnimalTView(APIView):
-    ...
+from manufacture.serializers import ShelterSerializerLight, OperationOrganizationSerializer
+from pet.serializer import PetTypeSerializer, PetGenderSerializer, BreadSerializer, ColorTypeSerializer, \
+    FursTypeSerializer, EarTypeSerializer, TailTypeSerializer, DeathCauseSerializer, DisposeCauseSerializer, \
+    EuthanasiaCauseSerializer
+from pet.models import Bread
+from manufacture.models import Shelter, OperatingOrganization
+from pet.models import PetType, PetGender, ColorType, FursType, EarType, TailType, DeathCause, DisposeCause, \
+    EuthanasiaCause
 
 
-class AnimalSexBookView(APIView):
-    ...
+class SheltersView(ListAPIView):
+    serializer_class = ShelterSerializerLight
+    queryset = Shelter.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        return
 
 
-class BreedsBookView(APIView):
-    ...
+class OpOrgsView(ListAPIView):
+    serializer_class = OperationOrganizationSerializer
+    queryset = OperatingOrganization.objects.all()
 
 
-class AnimalColorsBookView(APIView):
-    ...
+class PetTypesView(ListAPIView):
+    serializer_class = PetTypeSerializer
+    queryset = PetType.objects.all()
 
 
-class FurTBookView(APIView):
-    ...
+class PetGendersView(ListAPIView):
+    parser_classes = PetGenderSerializer
+    queryset = PetGender.objects.all()
 
 
-class EarTBookView(APIView):
-    ...
+class BreedsView(ListAPIView):
+    parser_classes = BreadSerializer
+    queryset = Bread.objects.all()
 
 
-class TailTBookView(APIView):
-    ...
+class ColorsView(ListAPIView):
+    parser_classes = ColorTypeSerializer
+    queryset = ColorType.objects.all()
 
 
-class DeathCauseBookView(APIView):
-    ...
+class FursTypesView(ListAPIView):
+    parser_classes = FursTypeSerializer
+    queryset = FursType.objects.all()
 
 
-class DisposalCauseBookView(APIView):
-    ...
+class EarTypesView(ListAPIView):
+    parser_classes = EarTypeSerializer
+    queryset = EarType.objects.all()
 
 
-class EuthanasiaCauseBookView(APIView):
-    ...
+class TailTypesView(ListAPIView):
+    parser_classes = TailTypeSerializer
+    queryset = TailType.objects.all()
+
+
+class DeathCausesView(ListAPIView):
+    parser_classes = DeathCauseSerializer
+    queryset = DeathCause.objects.all()
+
+
+class DisposalCauseView(ListAPIView):
+    parser_classes = DisposeCauseSerializer
+    queryset = DisposeCause.objects.all()
+
+
+class EuthanasiaCauseBookView(ListAPIView):
+    parser_classes = EuthanasiaCauseSerializer
+    queryset = EuthanasiaCause.objects.all()

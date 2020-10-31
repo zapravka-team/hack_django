@@ -1,6 +1,64 @@
 from rest_framework.serializers import ModelSerializer
 import rest_framework.serializers as ser
-from .models import Pet, PetType
+
+from .models import Pet, HealthStatus, Vaccination, Treatment, PetType, ColorType, FursType, TailType, EarType, \
+    DeathCause, PetGender, Bread, DisposeCause, EuthanasiaCause
+from authentication.serializers import VetSerializer, CaregiverSerializer, PetOwnerSerializer
+from manufacture.serializers import ShelterSerializer
+
+
+class EuthanasiaCauseSerializer(ModelSerializer):
+    class Meta:
+        model = EuthanasiaCause
+        exclude = ['id']
+
+
+class DisposeCauseSerializer(ModelSerializer):
+    class Meta:
+        model = DisposeCause
+        exclude = ['id']
+
+
+class ColorTypeSerializer(ModelSerializer):
+    class Meta:
+        model = ColorType
+        exclude = ['id']
+
+
+class FursTypeSerializer(ModelSerializer):
+    class Meta:
+        model = FursType
+        exclude = ['id']
+
+
+class TailTypeSerializer(ModelSerializer):
+    class Meta:
+        model = TailType
+        exclude = ['id']
+
+
+class EarTypeSerializer(ModelSerializer):
+    class Meta:
+        model = EarType
+        exclude = ['id']
+
+
+class DeathCauseSerializer(ModelSerializer):
+    class Meta:
+        model = DeathCause
+        exclude = ['id']
+
+
+class PetGenderSerializer(ModelSerializer):
+    class Meta:
+        model = PetGender
+        exclude = ['id']
+
+
+class BreadSerializer(ModelSerializer):
+    class Meta:
+        model = Bread
+        exclude = ['id']
 
 
 class PetTypeSerializer(ModelSerializer):
@@ -9,84 +67,45 @@ class PetTypeSerializer(ModelSerializer):
         fields = ['key']
 
 
-class CustomSerializer(ModelSerializer):
-    ...
+class HealthStatusSerializer(ser.ModelSerializer):
+    class Meta:
+        model = HealthStatus
+        exclude = ['id', 'pet']
 
 
-class PetSerializer(ModelSerializer):
+class VaccinationSerializer(ser.ModelSerializer):
+    class Meta:
+        model = Vaccination
+        exclude = ['id', 'pet']
+
+
+class TreatmentSerializer(ser.ModelSerializer):
+    class Meta:
+        model = Treatment
+        exclude = ['id', 'pet']
+
+
+class PetSerializer(ser.ModelSerializer):
+    color = ser.CharField(source='color.value')
+    bread = ser.CharField(source='bread.value')
+    pet_type = ser.CharField(source='pet_type.value')
+    furs_type = ser.CharField(source='furs_type.value')
+    ears_type = ser.CharField(source='ears_type.value')
+    tail_type = ser.CharField(source='tail_type.value')
+    size_type = ser.CharField(source='size_type.value')
+    gender = ser.CharField(source='gender.value')
+    disposals_cause = ser.CharField(source='disposals_cause.value')
+    death_cause = ser.CharField(source='death_cause.value')
+    euthanasia_cause = ser.CharField(source='euthanasia_cause.value')
+    administration_area = ser.CharField(source='administration_area.name')
+    vet = VetSerializer()
+    caregiver = CaregiverSerializer()
+    shelter = ShelterSerializer()
+    owner = PetOwnerSerializer()
+    vaccination = VaccinationSerializer(many=True)
+    treatment = TreatmentSerializer(many=True)
+    heath_history = HealthStatusSerializer(many=True, source='health_status')
+
     class Meta:
         model = Pet
-        fields = '__all__'
-    def to_internal_value(self, data):
-        ret = super().to_internal_value(data)
-        print(ret)
-
-        return ret
-
-    def to_representation(self, instance):
-        return {'id': instance.accounting_card,
-                'общие сведения': {
-            'вид': instance.pet_type.key,
-            'возраст': instance.birthdate,
-            'вес': instance.weight,
-            'кличка': instance.name,
-            'пол': instance.gender,
-            'порода': instance.bread.key,
-            'окрас': instance.color.key,
-            'шерсть': instance.pet_type.key,
-            'уши': instance.ears_type.key,
-            'хвост': instance.tail_type.key,
-            'размер': instance.size_type.key,
-            'особые приметы': instance.special_parameters,
-            'Вольер №': instance.aviary,
-            },
-                "дополнительные сведения": {
-                    'идентификационная метка': instance.id_label,
-                    #стерилизовано
-                    'дата стерилизации': instance.sterilization_date,
-                    'ф.и.о. ветеринарного врача': instance.vet_nlp,
-                    'Социализировано': instance.socialized
-                },
-                "сведения об отлове": {
-                    "заказ-наряд / акт о поступлении животного №": instance.work_order,
-                    #"заказ-наряд дата/ акт о поступлении животного, дата": instance.
-                    "административный округ": instance.administration_area.key,
-                    "акт отлова №": instance.catching_act,
-                    "адрес места отлова": instance.catching_address
-                },
-                "сведения о новых владельцах": [{
-                    "юридическое лицо": instance.id,
-                    "ф.и.о. опекунов": instance.id,
-                    "физическое лицо ф.и.о.": instance.id
-                }],
-                "движение животного": {
-                    "дата поступления в приют": instance.recipient_date,
-                    "акт №": instance.recipient_act,
-                    "дата выбытия из приюта": instance.disposals_date,
-                    "причина выбытия": instance.disposals_cause,
-                    "акт/договор №": instance.contract_act
-                },
-                "ответственные за животное": {
-                    "адрес приюта": instance.id,
-                    "эксплуатирующая организация": instance.id,
-                    "ф.и.о. руководителя приюта": instance.id,
-                    "ф.и.о. сотрудника по уходу за животным": instance.id
-                },
-                "сведения об обработке от экто- и эндопаразитов": [{
-                    "№ п/п": instance.id,
-                    "дата": instance.id,
-                    "название препарата": instance.id,
-                    "доза": instance.id
-                }],
-                "сведения о вакцинации": [{
-                    "№ п/п": instance.number,
-                    "дата": instance.date,
-                    "вид вакцины": instance.vac_type,
-                    "№ серии": instance.serial_number
-                }],
-                "сведения о состоянии здоровья": {
-                    "дата осмотра": instance.id,
-                    "анамнез": instance.id
-                }
-        }
-
+        exclude = ['id']
