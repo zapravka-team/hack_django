@@ -21,3 +21,9 @@ class PetsView(APIView):
         norm_req = normalize_pet_query_request(request_data)
         ser = PetSerializer(get_pet_query(norm_req), many=True)
         return Response(data=ser.data)
+
+class TestAPIView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        request_data = request.data
+        norm = normalize_pet_query_request(request_data)

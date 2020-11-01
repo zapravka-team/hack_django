@@ -19,16 +19,33 @@ class DisposeCauseSerializer(ModelSerializer):
         exclude = ['id']
 
 
-class ColorTypeSerializer(ModelSerializer):
-    class Meta:
-        model = ColorType
-        fields = ['value']
+class ColorTypeSerializer(ser.Serializer):
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    def to_representation(self, instance):
+        ret = {}
+        for pet_type in PetType.objects.all():
+            ret[pet_type.value] = ColorType.objects.values_list('value', flat=True).filter(pet_type=pet_type)
+        return ret
 
 
-class FursTypeSerializer(ModelSerializer):
-    class Meta:
-        model = FursType
-        fields = ['value']
+class FursTypeSerializer(ser.Serializer):
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    def to_representation(self, instance):
+        ret = {}
+        for pet_type in PetType.objects.all():
+            ret[pet_type.value] = FursType.objects.values_list('value', flat=True).filter(pet_type=pet_type)
+        return ret
 
 
 class TailTypeSerializer(ModelSerializer):
@@ -55,10 +72,18 @@ class PetGenderSerializer(ModelSerializer):
         exclude = ['id']
 
 
-class BreedSerializer(ModelSerializer):
-    class Meta:
-        model = Breed
-        fields = ['value']
+class BreedSerializer(ser.Serializer):
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    def to_representation(self, instance):
+        ret = {}
+        for pet_type in PetType.objects.all():
+            ret[pet_type.value] = Breed.objects.values_list('value', flat=True).filter(pet_type=pet_type)
+        return ret
 
 
 class PetTypeSerializer(ModelSerializer):
@@ -83,6 +108,10 @@ class TreatmentSerializer(ser.ModelSerializer):
     class Meta:
         model = Treatment
         exclude = ['id', 'pet']
+
+
+class PetSmartSerializer(ser.Serializer):
+    pass
 
 
 class PetSerializer(ser.ModelSerializer):

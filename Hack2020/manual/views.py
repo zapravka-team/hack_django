@@ -1,6 +1,4 @@
 from rest_framework.generics import ListAPIView
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from manufacture.serializers import ShelterSerializerLight, OperationOrganizationSerializer
 from pet.serializer import PetTypeSerializer, PetGenderSerializer, BreedSerializer, ColorTypeSerializer, \
     FursTypeSerializer, EarTypeSerializer, TailTypeSerializer, DeathCauseSerializer, DisposeCauseSerializer, \
@@ -9,74 +7,65 @@ from pet.models import Breed
 from manufacture.models import Shelter, OperatingOrganization
 from pet.models import PetType, PetGender, ColorType, FursType, EarType, TailType, DeathCause, DisposeCause, \
     EuthanasiaCause
-
+from rest_framework.permissions import IsAuthenticated
 
 class SheltersView(ListAPIView):
     serializer_class = ShelterSerializerLight
-    queryset = Shelter.objects.all()
-
-    def post(self, request, *args, **kwargs):
-        return
+    queryset = Shelter.objects
 
 
 class OpOrgsView(ListAPIView):
     serializer_class = OperationOrganizationSerializer
-    queryset = OperatingOrganization.objects.all()
+    queryset = OperatingOrganization.objects
 
 
 class PetTypesView(ListAPIView):
     serializer_class = PetTypeSerializer
-    queryset = PetType.objects.all()
+    queryset = PetType.objects
 
 
 class PetGendersView(ListAPIView):
     serializer_classes = PetGenderSerializer
-    queryset = PetGender.objects.all()
+    queryset = PetGender.objects
 
 
-class BreedsView(APIView):
-
-    def get(self, request, *args, **kwargs):
-        cats = BreedSerializer(Breed.objects.filter(pet_type__value='кошка'), many=True)
-        dogs = BreedSerializer(Breed.objects.filter(pet_type__value='собака'), many=True)
-        return Response(data={'cats': cats.data, 'dogs': dogs.data})
+class BreedsView(ListAPIView):
+    serializer_class = BreedSerializer
+    queryset = Breed.objects
 
 
-class ColorsView(APIView):
-    def get(self, request, *args, **kwargs):
-        cats = ColorTypeSerializer(ColorType.objects.filter(pet_type__value='кошка'), many=True)
-        dogs = ColorTypeSerializer(ColorType.objects.filter(pet_type__value='собака'), many=True)
-        return Response(data={'cats': cats.data, 'dogs': dogs.data})
+class ColorsView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ColorTypeSerializer
+    queryset = ColorType.objects
 
 
-class FursTypesView(APIView):
-
-    def get(self, request, *args, **kwargs):
-        cats = FursTypeSerializer(FursType.objects.filter(pet_type__value='кошка'), many=True)
-        dogs = FursTypeSerializer(FursType.objects.filter(pet_type__value='собака'), many=True)
-        return Response(data={'cats': cats.data, 'dogs': dogs.data})
+class FursTypesView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = FursTypeSerializer
+    queryset = FursType.objects
 
 
 class EarTypesView(ListAPIView):
     serializer_classes = EarTypeSerializer
-    queryset = EarType.objects.all()
+    queryset = EarType.objects
 
 
 class TailTypesView(ListAPIView):
     serializer_class = TailTypeSerializer
-    queryset = TailType.objects.all()
+    queryset = TailType.objects
 
 
 class DeathCausesView(ListAPIView):
     serializer_classes = DeathCauseSerializer
-    queryset = DeathCause.objects.all()
+    queryset = DeathCause.objects
 
 
 class DisposalCauseView(ListAPIView):
     serializer_class = DisposeCauseSerializer
-    queryset = DisposeCause.objects.all()
+    queryset = DisposeCause.objects
 
 
 class EuthanasiaCauseBookView(ListAPIView):
     serializer_class = EuthanasiaCauseSerializer
-    queryset = EuthanasiaCause.objects.all()
+    queryset = EuthanasiaCause.objects
