@@ -6,7 +6,7 @@ from .services import get_pet_query, normalize_pet_query_request
 from .serializer import PetSerializer
 from .init_data import load_all
 from .database import load_xlsx
-
+from django.conf import settings
 
 
 # Create your views here.
@@ -28,3 +28,13 @@ class TestAPIView(APIView):
     def post(self, request, *args, **kwargs):
         request_data = request.data
         norm = normalize_pet_query_request(request_data)
+
+
+class ImageApiView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        data = request.GET
+        if data == 'dogs':
+            return Response(data=[f'{settings.STATIC_URL}/img/dogs/{i}.jpg' for i in range(20)])
+        else:
+            return Response(data=[f'{settings.STATIC_URL}/img/cats/{i}.jpg' for i in range(20)])
