@@ -11,7 +11,7 @@ FILTERING_FIELDS = ('name', 'weight', 'gender',)
 REQUEST_PARAMS = {'type', 'count', 'offset', 'filter', 'search'}
 REGEX_SEARCHING_FIELDS = ('name',)
 
-DEFAULT_LIMIT = 100
+DEFAULT_LIMIT = 99999
 
 
 class ValidationError(Exception):
@@ -85,10 +85,6 @@ def get_pet_query(nor_req, managing_filter=Q()):
     if nor_req['sort'] is not None:
         sorting = nor_req['sort']
 
-    # special_values = []
-    # for field in nor_req['fields']:
-    #     if field in PET_TYPE_FIELDS:
-    #         special_values.append(f'{field}__value')
-    #     else:
-    #         special_values.append(field)
     return Pet.objects.filter(filter_exp).order_by(sorting)[offset_count]
+
+

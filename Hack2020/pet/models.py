@@ -1,5 +1,7 @@
 from django.db import models
 from django.db.models.fields.related import RelatedField
+from django.conf import settings
+import os
 
 
 class AbstractTypeModel(models.Model):
@@ -102,7 +104,7 @@ class Pet(models.Model):
     socialized = models.BooleanField(null=True)
 
     # catching
-    work_order = models.CharField(max_length=32,null=True)
+    work_order = models.CharField(max_length=32, null=True)
     work_order_date = models.DateField(null=True)
     administration_area = models.ForeignKey('manufacture.AdministrativeRegion', on_delete=models.SET_NULL, null=True)
     catching_act = models.CharField(max_length=32, null=True)
@@ -126,6 +128,9 @@ class Pet(models.Model):
 
     # shelter
     shelter = models.ForeignKey('manufacture.Shelter', on_delete=models.SET_NULL, null=True)
+
+    # special
+    description = models.CharField(max_length=128, null=True)
 
     # system
     create_time = models.DateTimeField(auto_created=True, auto_now_add=True, editable=False)
@@ -174,3 +179,11 @@ class HealthStatus(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='health_status')
     inspection_date = models.DateField(null=True)
     anamnesis = models.CharField(max_length=40, null=True)
+
+
+class PetImage(models.Model):
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to="static/img/")
+
+    def absolute_url(self):
+        return self.image.url
