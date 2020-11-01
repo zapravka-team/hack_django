@@ -6,7 +6,7 @@ from .services import get_pet_query, normalize_pet_query_request
 from .serializer import PetSerializer
 from .init_data import load_all
 from .database import load_xlsx
-import xlrd
+
 
 
 # Create your views here.
@@ -14,13 +14,14 @@ import xlrd
 class PetsView(APIView):
 
     def post(self, request, *args, **kwargs):
-        load_all()
+        # load_all()
         print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        load_xlsx()
+        # load_xlsx()
         request_data = request.data
         norm_req = normalize_pet_query_request(request_data)
         ser = PetSerializer(get_pet_query(norm_req), many=True)
         return Response(data=ser.data)
+
 
 class TestAPIView(APIView):
 

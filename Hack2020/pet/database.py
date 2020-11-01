@@ -63,6 +63,7 @@ def load_xlsx():
     data = pd.read_excel(os.path.join(settings.BASE_DIR, 'pet/DataSet.xlsx'), header=1)
 
     for i, pet_row in enumerate(data.itertuples()):
+        pet = load_pet_from_row(pet_row)
         raw_numbers = pet_row[46]
         raw_date = pet_row[47]
         raw_product_name = pet_row[48]

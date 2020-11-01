@@ -1,5 +1,7 @@
 from django.db import models
 from django.db.models.fields.related import RelatedField
+from django.conf import settings
+import os
 
 
 class AbstractTypeModel(models.Model):
@@ -177,3 +179,11 @@ class HealthStatus(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='health_status')
     inspection_date = models.DateField(null=True)
     anamnesis = models.CharField(max_length=40, null=True)
+
+
+class PetImage(models.Model):
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to="static/img/")
+
+    def absolute_url(self):
+        return self.image.url

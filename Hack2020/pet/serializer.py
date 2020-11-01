@@ -2,7 +2,7 @@ from rest_framework.serializers import ModelSerializer
 import rest_framework.serializers as ser
 
 from .models import Pet, HealthStatus, Vaccination, Treatment, PetType, ColorType, FursType, TailType, EarType, \
-    DeathCause, PetGender, Breed, DisposeCause, EuthanasiaCause
+    DeathCause, PetGender, Breed, DisposeCause, EuthanasiaCause, PetImage
 from authentication.serializers import VetSerializer, CaregiverSerializer, PetOwnerSerializer
 from manufacture.serializers import ShelterSerializer
 
@@ -110,8 +110,26 @@ class TreatmentSerializer(ser.ModelSerializer):
         exclude = ['id', 'pet']
 
 
+class PetImageSerializer(ser.ModelSerializer):
+    class Meta:
+        model = PetImage
+        fields = ['absolute_url']
+
+
 class PetSmartSerializer(ser.Serializer):
-    pass
+
+    def __init__(self, field_list, **kwargs):
+        super().__init__(**kwargs)
+        self.field_list = field_list
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    def to_representation(self, instance):
+        pass
 
 
 class PetSerializer(ser.ModelSerializer):
@@ -134,6 +152,7 @@ class PetSerializer(ser.ModelSerializer):
     vaccination = VaccinationSerializer(many=True)
     treatment = TreatmentSerializer(many=True)
     heath_history = HealthStatusSerializer(many=True, source='health_status')
+    images = PetImageSerializer(many=True)
 
     class Meta:
         model = Pet
