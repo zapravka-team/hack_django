@@ -2,17 +2,14 @@ from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.response import Response
 from .services import get_pet_query, normalize_pet_query_request, get_pet_dict, api_normalize_pet_request
-from rest_framework.serializers import ModelSerializer
 from .serializer import PetSerializer
 from django.conf import settings
 from .models import Pet
 
+
 class PetsView(APIView):
 
     def post(self, request, *args, **kwargs):
-        # load_all()
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        # load_xlsx()
         request_data = request.data
         norm_req = normalize_pet_query_request(request_data)
         ser = PetSerializer(get_pet_query(norm_req), many=True)
@@ -21,6 +18,7 @@ class PetsView(APIView):
 
 class UpdateDetailPetView(RetrieveUpdateAPIView):
     queryset = Pet.objects
+    serializer_class = PetSerializer
 
 
 class TestAPIView(APIView):
