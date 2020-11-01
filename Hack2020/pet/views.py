@@ -34,7 +34,7 @@ class ImageApiView(APIView):
 
     def post(self, request, *args, **kwargs):
         data = request.GET
-        if data['pet'] == 'dogs':
+        if data['pets'] == 'dogs':
             return Response(data=[f'{settings.STATIC_URL}/img/dogs/{i}.jpg' for i in range(20)])
         else:
             return Response(data=[f'{settings.STATIC_URL}/img/cats/{i}.jpg' for i in range(20)])
