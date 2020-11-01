@@ -1,14 +1,14 @@
 from django.db.models import Q
-
+from .serializer import *
 from .models import Pet
 
 PET_FIELDS = Pet.get_field_names()
 
-PET_BASE_FIELDS = ('name', 'color', 'bread')
+PET_BASE_FIELDS = ('name', 'color', 'breed')
 PET_TYPE_FIELDS = set(Pet.get_type_filed_names())
 print(PET_TYPE_FIELDS)
 FILTERING_FIELDS = ('name', 'weight', 'gender',)
-REQUEST_PARAMS = {'type', 'count', 'offset', 'filter', 'search'}
+REQUEST_PARAMS = {'type', 'count', 'offset', 'filter', 'search', 'sort'}
 REGEX_SEARCHING_FIELDS = ('name',)
 
 DEFAULT_LIMIT = 99999
@@ -64,6 +64,33 @@ def normalize_pet_query_request(request_data):
     return normalized_req
 
 
+def api_normalize_pet_request(request_data):
+    normalized_req = {}
+    if 'fields' not in request_data:
+        normalized_req['fields'] = PET_BASE_FIELDS
+    else:
+        normalized_req['fields'] = request_data['fields']
+    try:
+        normalized_req['count'] = int(request_data.get('count', DEFAULT_LIMIT))
+        normalized_req['offset'] = int(request_data.get('offset', 0))
+    except ValueError:
+        raise ValidationError('count and offset must be int ')
+
+    req_filter = request_data.get('filter', {})
+    for field, values in req_filter.items():
+        if field not in PET_FIELDS:
+            raise ExcessFiled(field=field)
+        if not isinstance(values, list):
+            raise ValidationError('values of fields must be list')
+        if len(values) == 0:
+            raise ValidationError('values cant be empty')
+    normalized_req['filter'] = req_filter
+    normalized_req['search'] = request_data.get('search')
+    normalized_req['sort'] = request_data.get('sort')
+    normalized_req['require_socialized'] = False
+    return normalized_req
+
+
 def get_pet_query(nor_req, managing_filter=Q()):
     filter_exp = managing_filter
     for field, values in nor_req['filter'].items():
@@ -80,7 +107,7 @@ def get_pet_query(nor_req, managing_filter=Q()):
 
     offset = nor_req['offset']
     count = nor_req['count']
-    offset_count = slice(offset, count)
+    offset_count = slice(offset, offset + count)
     sorting = 'id'
     if nor_req['sort'] is not None:
         sorting = nor_req['sort']
@@ -88,3 +115,11 @@ def get_pet_query(nor_req, managing_filter=Q()):
     return Pet.objects.filter(filter_exp).order_by(sorting)[offset_count]
 
 
+def get_pet_dict(nor_req, managing_filter=Q()):
+    query = get_pet_query(nor_req, managing_filter)
+    fields = nor_req['fields']
+    for i in range(len(fields)):
+        if fields[i] in PET_TYPE_FIELDS:
+            fields[i] += "__value"
+
+    return [query.values(*fields).all()]

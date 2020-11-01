@@ -1,15 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Pet
-from .services import get_pet_query, normalize_pet_query_request
-
+from .services import get_pet_query, normalize_pet_query_request, get_pet_dict, api_normalize_pet_request
+from rest_framework.serializers import ModelSerializer
 from .serializer import PetSerializer
-from .init_data import load_all
-from .database import load_xlsx
 from django.conf import settings
 
-
-# Create your views here.
 
 class PetsView(APIView):
 
@@ -26,13 +21,14 @@ class PetsView(APIView):
 class TestAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
-        request_data = request.data
-        norm = normalize_pet_query_request(request_data)
+        request_data = api_normalize_pet_request(request.data)
+        pet_dict = get_pet_dict(request_data)
+        return Response(data=pet_dict)
 
 
 class ImageApiView(APIView):
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         data = request.GET
         if data['pets'] == 'dogs':
             return Response(data=[f'{settings.STATIC_URL}/img/dogs/{i}.jpg' for i in range(20)])

@@ -118,9 +118,9 @@ class Pet(models.Model):
     recipient_date = models.DateField(null=True)
     recipient_act = models.CharField(max_length=128, null=True)
     disposals_date = models.DateField(null=True)
-    disposals_cause = models.ForeignKey(DisposeCause, on_delete=models.SET_NULL, null=True)
-    death_cause = models.ForeignKey(DeathCause, on_delete=models.SET_NULL, null=True)
-    euthanasia_cause = models.ForeignKey(EuthanasiaCause, on_delete=models.SET_NULL, null=True)
+    disposals_cause = TypeField(DisposeCause, on_delete=models.SET_NULL, null=True)
+    death_cause = TypeField(DeathCause, on_delete=models.SET_NULL, null=True)
+    euthanasia_cause = TypeField(EuthanasiaCause, on_delete=models.SET_NULL, null=True)
     contract_act = models.CharField(max_length=128, null=True)
 
     # Caregivers
