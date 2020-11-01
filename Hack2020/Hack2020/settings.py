@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'authentication',
     'manufacture',
     'report',
+    'rest_framework_swagger'
 ]
 
 MIDDLEWARE = [
@@ -134,5 +135,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
